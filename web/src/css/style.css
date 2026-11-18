@@ -7915,3 +7915,39 @@ html:not([data-theme="dark"]) .sidebar-collapse-btn:hover {
     justify-content: flex-end;
   }
 }
+
+/* ── SEARCHABLE COLLABORATORS IN DAILY PLANNER ───────────────── */
+.co-owner-dropdown-results {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-md) !important;
+  border-radius: var(--r-md) !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--border-sm) !important;
+  z-index: 99999 !important;
+}
+.co-owner-result-item {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  padding: 8px 12px !important;
+  cursor: pointer !important;
+  transition: background 0.15s ease !important;
+  border-bottom: 1px solid var(--border-sm) !important;
+}
+.co-owner-result-item:last-child {
+  border-bottom: none !important;
+}
+.co-owner-result-item:hover:not(.already-added) {
+  background: var(--bg-hover) !important;
+}
+.co-owner-result-item.already-added {
+  opacity: 0.65 !important;
+  cursor: default !important;
+  background: rgba(16, 185, 129, 0.05) !important;
+}
+.co-owner-chip {
+  transition: all 0.15s ease;
+}
+.co-owner-chip:hover {
+  transform: translateY(-1px);
+}

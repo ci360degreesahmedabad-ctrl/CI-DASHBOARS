@@ -1777,11 +1777,22 @@ export function initDailyPlanner(container, options = {}) {
           <!-- Co-Owners / Multiple Collaborators -->
           <div class="form-group" style="margin-top:10px;">
             <label style="display:flex;justify-content:space-between;align-items:center;">
-              <span>Co-Owners / Additional People</span>
-              <small style="color:var(--text-3);font-size:11px;">Add multiple collaborators for this task</small>
+              <span>Co-Owners / Additional People <span id="coOwnersCountBadge" style="display:none;font-size:11px;background:rgba(0,112,243,0.15);color:var(--accent);padding:1px 7px;border-radius:10px;font-weight:700;">0</span></span>
+              <small style="color:var(--text-3);font-size:11px;">Search & add multiple collaborators</small>
             </label>
             <div id="coOwnersSelectedContainer" style="display:flex;flex-wrap:wrap;gap:6px;min-height:28px;margin:4px 0 8px;"></div>
-            <select id="taskCoOwnerSelect" class="input">
+            
+            <div class="co-owner-search-box-wrap" style="position:relative;">
+              <div style="position:relative;display:flex;align-items:center;">
+                <span style="position:absolute;left:10px;font-size:13px;color:var(--text-4);pointer-events:none;">🔍</span>
+                <input type="text" id="taskCoOwnerSearchInput" class="input" placeholder="Search team member by name or department..." autocomplete="off" style="padding-left:32px;padding-right:30px;font-size:12.5px;">
+                <button type="button" id="taskCoOwnerClearBtn" style="position:absolute;right:8px;background:transparent;border:none;color:var(--text-4);font-size:16px;cursor:pointer;line-height:1;display:none;padding:2px 6px;" title="Clear">×</button>
+              </div>
+              <div id="taskCoOwnerDropdownResults" class="co-owner-dropdown-results" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;max-height:220px;overflow-y:auto;background:var(--bg-card);border:1px solid var(--border-md);border-radius:var(--r-md);box-shadow:var(--shadow-xl);z-index:99999;padding:4px 0;"></div>
+            </div>
+
+            <!-- Optional legacy selector fallback -->
+            <select id="taskCoOwnerSelect" class="input" style="display:none;margin-top:6px;">
               <option value="">+ Add Co-Owner / Collaborator...</option>
               ${state.personnelList.map(p => `
                 <option value="${p._id}">+ 👤 ${escapeHtml(p.name)} (${escapeHtml(p.department || p.role || 'Member')})</option>
@@ -1849,9 +1860,44 @@ export function initDailyPlanner(container, options = {}) {
 
     const coContainer = modalBg.querySelector('#coOwnersSelectedContainer');
     const coSelect = modalBg.querySelector('#taskCoOwnerSelect');
+    const coSearchInput = modalBg.querySelector('#taskCoOwnerSearchInput');
+    const coClearBtn = modalBg.querySelector('#taskCoOwnerClearBtn');
+    const coDropdownResults = modalBg.querySelector('#taskCoOwnerDropdownResults');
+    const coBadge = modalBg.querySelector('#coOwnersCountBadge');
+
+    const updateCoBadge = () => {
+      if (!coBadge) return;
+      if (currentCoOwners.length > 0) {
+        coBadge.textContent = String(currentCoOwners.length);
+        coBadge.style.display = 'inline-block';
+      } else {
+        coBadge.style.display = 'none';
+      }
+    };
+
+    const addCoOwner = (pers) => {
+      if (!pers || !pers._id) return;
+      const already = currentCoOwners.some(c => String(c.personnelId) === String(pers._id));
+      if (!already) {
+        currentCoOwners.push({
+          personnelId: pers._id,
+          name: pers.name,
+          role: pers.role || '',
+          department: pers.department || ''
+        });
+        renderCoOwnersChips();
+      }
+      if (coSearchInput) {
+        coSearchInput.value = '';
+        if (coClearBtn) coClearBtn.style.display = 'none';
+        renderCoOwnerResults('');
+        coSearchInput.focus();
+      }
+    };
 
     const renderCoOwnersChips = () => {
       if (!coContainer) return;
+      updateCoBadge();
       if (currentCoOwners.length === 0) {
         coContainer.innerHTML = '<span style="font-size:11.5px;color:var(--text-4);font-style:italic;">No co-owners added yet</span>';
         return;
@@ -1868,11 +1914,137 @@ export function initDailyPlanner(container, options = {}) {
           const idx = parseInt(btn.dataset.idx, 10);
           currentCoOwners.splice(idx, 1);
           renderCoOwnersChips();
+          if (coDropdownResults && coDropdownResults.style.display !== 'none') {
+            renderCoOwnerResults(coSearchInput ? coSearchInput.value : '');
+          }
         };
       });
     };
 
+    const renderCoOwnerResults = (query = '') => {
+      if (!coDropdownResults) return;
+      const q = (query || '').toLowerCase().trim();
+      const list = Array.isArray(state.personnelList) ? state.personnelList : [];
+
+      const filtered = list.filter(p => {
+        if (!q) return true;
+        const name = (p.name || '').toLowerCase();
+        const dept = (p.department || '').toLowerCase();
+        const role = (p.role || '').toLowerCase();
+        const email = (p.email || '').toLowerCase();
+        return name.includes(q) || dept.includes(q) || role.includes(q) || email.includes(q);
+      });
+
+      if (filtered.length === 0) {
+        coDropdownResults.innerHTML = `
+          <div style="padding:14px 16px;font-size:12px;color:var(--text-3);text-align:center;">
+            🔍 No team members found matching "<strong>${escapeHtml(q)}</strong>"
+          </div>
+        `;
+        coDropdownResults.style.display = 'block';
+        return;
+      }
+
+      coDropdownResults.innerHTML = filtered.map(p => {
+        const isAdded = currentCoOwners.some(c => String(c.personnelId) === String(p._id));
+        const initial = (p.name || 'U').charAt(0).toUpperCase();
+        return `
+          <div class="co-owner-result-item ${isAdded ? 'already-added' : ''}" data-id="${p._id}">
+            <div style="display:flex;align-items:center;gap:10px;min-width:0;flex:1;">
+              <span style="width:26px;height:26px;border-radius:50%;background:rgba(0,112,243,0.12);color:var(--accent);display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">
+                ${initial}
+              </span>
+              <div style="min-width:0;flex:1;">
+                <div style="font-weight:600;font-size:12.5px;color:var(--text-1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                  ${escapeHtml(p.name)}
+                </div>
+                <div style="font-size:11px;color:var(--text-3);">
+                  ${escapeHtml(p.department || p.role || 'Member')}
+                </div>
+              </div>
+            </div>
+            <div style="flex-shrink:0;">
+              ${isAdded ? `
+                <span style="font-size:11.5px;color:#10b981;font-weight:700;display:inline-flex;align-items:center;gap:3px;">
+                  ✓ Added
+                </span>
+              ` : `
+                <span class="btn small primary" style="padding:3px 10px;font-size:11px;border-radius:6px;pointer-events:none;">
+                  + Add
+                </span>
+              `}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      coDropdownResults.querySelectorAll('.co-owner-result-item:not(.already-added)').forEach(item => {
+        item.onclick = (e) => {
+          e.stopPropagation();
+          const pId = item.dataset.id;
+          const pers = list.find(p => String(p._id) === String(pId));
+          if (pers) {
+            addCoOwner(pers);
+          }
+        };
+      });
+
+      coDropdownResults.style.display = 'block';
+    };
+
     renderCoOwnersChips();
+
+    if (coSearchInput) {
+      coSearchInput.onfocus = () => {
+        renderCoOwnerResults(coSearchInput.value);
+      };
+
+      coSearchInput.oninput = (e) => {
+        const val = e.target.value;
+        if (coClearBtn) coClearBtn.style.display = val ? 'block' : 'none';
+        renderCoOwnerResults(val);
+      };
+
+      coSearchInput.onkeydown = (e) => {
+        if (e.key === 'Escape') {
+          if (coDropdownResults) coDropdownResults.style.display = 'none';
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          const list = Array.isArray(state.personnelList) ? state.personnelList : [];
+          const q = (coSearchInput.value || '').toLowerCase().trim();
+          const match = list.find(p => {
+            const isAdded = currentCoOwners.some(c => String(c.personnelId) === String(p._id));
+            if (isAdded) return false;
+            if (!q) return true;
+            return (p.name || '').toLowerCase().includes(q) || (p.department || '').toLowerCase().includes(q);
+          });
+          if (match) {
+            addCoOwner(match);
+          }
+        }
+      };
+    }
+
+    if (coClearBtn) {
+      coClearBtn.onclick = (e) => {
+        e.stopPropagation();
+        if (coSearchInput) {
+          coSearchInput.value = '';
+          coSearchInput.focus();
+        }
+        coClearBtn.style.display = 'none';
+        renderCoOwnerResults('');
+      };
+    }
+
+    // Close dropdown on outside click
+    const handleOutsideClick = (e) => {
+      const wrap = modalBg.querySelector('.co-owner-search-box-wrap');
+      if (wrap && !wrap.contains(e.target)) {
+        if (coDropdownResults) coDropdownResults.style.display = 'none';
+      }
+    };
+    modalBg.addEventListener('click', handleOutsideClick);
 
     if (coSelect) {
       coSelect.onchange = () => {
@@ -1880,16 +2052,7 @@ export function initDailyPlanner(container, options = {}) {
         if (!selId) return;
         const pers = state.personnelList.find(p => String(p._id) === String(selId));
         if (pers) {
-          const already = currentCoOwners.some(c => String(c.personnelId) === String(pers._id));
-          if (!already) {
-            currentCoOwners.push({
-              personnelId: pers._id,
-              name: pers.name,
-              role: pers.role || '',
-              department: pers.department || ''
-            });
-            renderCoOwnersChips();
-          }
+          addCoOwner(pers);
         }
         coSelect.value = '';
       };
