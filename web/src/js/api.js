@@ -440,7 +440,8 @@ export function isNotificationBannerDismissed() {
   try {
     if (isNotificationEnabled()) return true;
     if (localStorage.getItem('ci360_notif_banner_dismissed') === 'true') return true;
-    if (typeof Notification !== 'undefined' && Notification.permission === 'denied') return true;
+    if (localStorage.getItem('ci360_global_notif_banner_dismissed')) return true;
+    if (typeof Notification !== 'undefined' && Notification.permission === 'granted') return true;
   } catch (e) { }
   return false;
 }
@@ -622,8 +623,17 @@ export function checkAndShowGlobalNotifBanner() {
     return;
   }
 
+  // If already dismissed, do not display
+  if (isNotificationBannerDismissed()) {
+    if (existing) existing.remove();
+    return;
+  }
+
   // If already rendered, don't duplicate
   if (existing) return;
+
+  const isMobile = (window.innerWidth <= 768) ||
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent || '');
 
   const banner = document.createElement('div');
   banner.id = 'ci360GlobalNotifBanner';
@@ -631,13 +641,15 @@ export function checkAndShowGlobalNotifBanner() {
 
   if (Notification.permission === 'denied') {
     // Permission is blocked in browser settings
-    banner.style.cssText = 'background:linear-gradient(90deg, rgba(239,68,68,0.18), rgba(220,38,38,0.12));border:1px solid rgba(239,68,68,0.4);border-radius:12px;padding:12px 18px;margin:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,0.15);';
+    banner.style.cssText = 'position:relative;z-index:20;background:linear-gradient(90deg, rgba(239,68,68,0.18), rgba(220,38,38,0.12));border:1px solid rgba(239,68,68,0.4);border-radius:12px;padding:12px 16px;margin:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 4px 16px rgba(0,0,0,0.15);flex-wrap:wrap;';
     banner.innerHTML = `
-      <div style="display:flex;align-items:center;gap:12px;flex:1;">
+      <div style="display:flex;align-items:center;gap:12px;flex:1;min-width:240px;">
         <span style="font-size:24px;line-height:1;">⚠️</span>
         <div style="font-size:12.5px;color:var(--text-1);line-height:1.4;">
-          <strong style="color:#ef4444;font-size:13.5px;display:block;margin-bottom:2px;">Desktop Notifications are Blocked in Your Browser</strong>
-          <span>To get desktop alerts for tasks, tickets, chat & jobs, click the lock/tune icon <strong style="color:var(--text-1);">🔒</strong> next to the URL in your browser address bar, set <strong>Notifications</strong> to <strong>Allow</strong>, and click Check Again.</span>
+          <strong style="color:#ef4444;font-size:13.5px;display:block;margin-bottom:2px;">Notifications are Blocked in Your Browser</strong>
+          <span>${isMobile
+            ? 'To get real-time alerts on your phone for tasks, tickets, chat & jobs, tap the lock/tune icon next to the address bar, set Notifications to Allow, then tap Check Again.'
+            : 'To get desktop alerts for tasks, tickets, chat & jobs, click the lock/tune icon <strong style="color:var(--text-1);">🔒</strong> next to the URL in your browser address bar, set <strong>Notifications</strong> to <strong>Allow</strong>, and click Check Again.'}</span>
         </div>
       </div>
       <div style="display:flex;gap:8px;align-items:center;">
@@ -647,17 +659,19 @@ export function checkAndShowGlobalNotifBanner() {
     `;
   } else {
     // Permission is default (not yet requested or granted)
-    banner.style.cssText = 'background:linear-gradient(90deg, rgba(234,179,8,0.16), rgba(245,158,11,0.1));border:1px solid rgba(234,179,8,0.4);border-radius:12px;padding:12px 18px;margin:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,0.12);';
+    banner.style.cssText = 'position:relative;z-index:20;background:linear-gradient(90deg, rgba(234,179,8,0.16), rgba(245,158,11,0.1));border:1px solid rgba(234,179,8,0.4);border-radius:12px;padding:12px 16px;margin:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 4px 16px rgba(0,0,0,0.12);flex-wrap:wrap;';
     banner.innerHTML = `
-      <div style="display:flex;align-items:center;gap:12px;flex:1;">
+      <div style="display:flex;align-items:center;gap:12px;flex:1;min-width:240px;">
         <span style="font-size:24px;line-height:1;">🔔</span>
         <div style="font-size:12.5px;color:var(--text-1);line-height:1.4;">
-          <strong style="color:#d97706;font-size:13.5px;display:block;margin-bottom:2px;">Enable Desktop Notifications</strong>
-          <span>Get real-time desktop popups on your computer for tasks, tickets, team chat & jobs across all dashboards.</span>
+          <strong style="color:#d97706;font-size:13.5px;display:block;margin-bottom:2px;">${isMobile ? 'Enable Instant Notifications' : 'Enable Desktop Notifications'}</strong>
+          <span>${isMobile
+            ? 'Get real-time alerts on your phone for tasks, tickets, team chat & jobs across all dashboards.'
+            : 'Get real-time desktop popups on your computer for tasks, tickets, team chat & jobs across all dashboards.'}</span>
         </div>
       </div>
       <div style="display:flex;gap:8px;align-items:center;">
-        <button type="button" id="ci360GlobalNotifEnableBtn" class="btn primary small" style="background:#d97706;border-color:#d97706;font-weight:700;white-space:nowrap;padding:7px 16px;border-radius:8px;">🔔 Turn On Notifications</button>
+        <button type="button" id="ci360GlobalNotifEnableBtn" class="btn primary small" style="background:#d97706;border-color:#d97706;font-weight:700;white-space:nowrap;padding:7px 16px;border-radius:8px;">${isMobile ? '🔔 Turn On Alerts' : '🔔 Turn On Notifications'}</button>
         <button type="button" id="ci360GlobalNotifDismissBtn" class="btn ghost small" style="color:var(--text-3);padding:4px 8px;font-size:14px;" title="Dismiss">✕</button>
       </div>
     `;
@@ -684,7 +698,7 @@ export function checkAndShowGlobalNotifBanner() {
       localStorage.setItem('ci360_notif_enabled', 'true');
       const granted = await requestNotificationPermission();
       if (granted) {
-        flashToast('Desktop notifications enabled successfully! 🔔');
+        flashToast('Notifications enabled successfully! 🔔');
       }
     };
   }
@@ -697,8 +711,8 @@ export function checkAndShowGlobalNotifBanner() {
         localStorage.setItem('ci360_notif_enabled', 'true');
         flashToast('Notifications are now allowed! 🔔');
         triggerSystemNotification({
-          title: 'CI360 Desktop Alerts Active 🔔',
-          message: 'Notifications are working on your computer!',
+          title: 'CI360 Alerts Active 🔔',
+          message: 'Notifications are working on this device!',
           id: 'test-check-' + Date.now(),
           bypassDedup: true
         });
@@ -713,6 +727,7 @@ export function checkAndShowGlobalNotifBanner() {
     dismissBtn.onclick = (e) => {
       e.stopPropagation();
       banner.remove();
+      localStorage.setItem('ci360_notif_banner_dismissed', 'true');
       localStorage.setItem('ci360_global_notif_banner_dismissed', String(Date.now()));
     };
   }
@@ -1319,12 +1334,10 @@ export function initNotificationBell() {
         hidePermBanner();
       } else if (Notification.permission === 'default') {
         if (permBanner) permBanner.style.setProperty('display', 'flex', 'important');
-        checkAndShowGlobalNotifBanner();
       }
     }
   }
   checkPermissionUI();
-  checkAndShowGlobalNotifBanner();
 
   if (testAlertBtn) {
     testAlertBtn.onclick = async (e) => {
@@ -2298,17 +2311,6 @@ export function renderAppShell({ user, currentRole, activeTab, tabs, title, subt
                       </div>
                     </button>
 
-                    ${user && user.role === 'superadmin' ? `
-                    <button type="button" class="tud-mobile-item" id="tudMobileSidebarConfigBtn" role="menuitem">
-                      <div class="tmi-left">
-                        <span style="font-size:16px">🧭</span>
-                        <span>Customize Sidebars</span>
-                      </div>
-                      <div class="tmi-right">
-                        <svg class="tmi-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-                      </div>
-                    </button>` : ''}
-
                     <button type="button" class="tud-mobile-item danger" id="logoutBtnMobile" role="menuitem">
                       <div class="tmi-left">
                         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
@@ -2318,17 +2320,6 @@ export function renderAppShell({ user, currentRole, activeTab, tabs, title, subt
                         <svg class="tmi-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
                       </div>
                     </button>
-
-                    ${user && user.role === 'superadmin' ? `
-                    <button type="button" class="tud-mobile-item" id="tudMobileSidebarConfigBtn" role="menuitem">
-                      <div class="tmi-left">
-                        <span style="font-size:16px">🧭</span>
-                        <span>Customize Sidebars</span>
-                      </div>
-                      <div class="tmi-right">
-                        <svg class="tmi-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-                      </div>
-                    </button>` : ''}
                   </div>
                 </div>
               </div>

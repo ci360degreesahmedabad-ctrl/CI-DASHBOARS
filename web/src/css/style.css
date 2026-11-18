@@ -842,7 +842,7 @@ textarea {
   border: 1px solid var(--border-md);
   border-radius: var(--r-lg);
   box-shadow: var(--shadow-lg);
-  z-index: 500;
+  z-index: 10000;
   overflow: hidden;
   animation: dropdownIn var(--t-fast) forwards;
 }
@@ -1091,7 +1091,7 @@ textarea {
   border: 1px solid var(--border-sm);
   border-radius: 16px;
   box-shadow: var(--shadow-xl);
-  z-index: 1000;
+  z-index: 10000;
   overflow: hidden;
   display: flex !important;
   flex-direction: column !important;
@@ -3340,9 +3340,9 @@ html:not([data-theme="dark"]) textarea {
     background: var(--bg-card) !important;
     border: 1px solid var(--border-sm) !important;
     border-radius: 14px !important;
-    box-shadow: var(--shadow-xl) !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--border-md) !important;
     padding: 6px !important;
-    z-index: 1000 !important;
+    z-index: 99999 !important;
   }
 
   /* Mobile Notifications Dropdown Panel (Fixed & Centered: Cannot Cut Off) */
@@ -3357,8 +3357,8 @@ html:not([data-theme="dark"]) textarea {
     background: var(--bg-card) !important;
     border: 1px solid var(--border-sm) !important;
     border-radius: 16px !important;
-    box-shadow: var(--shadow-xl) !important;
-    z-index: 1050 !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--border-md) !important;
+    z-index: 99999 !important;
     max-height: calc(100vh - 136px) !important;
     flex-direction: column !important;
     overflow: hidden !important;
@@ -7811,7 +7811,7 @@ html:not([data-theme="dark"]) .sidebar-collapse-btn:hover {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.16);
   animation: fadeInDown 0.22s ease-out;
   position: relative;
-  z-index: 100;
+  z-index: 10 !important;
 }
 
 [data-theme="light"] .ci360-notif-prompt-banner {
