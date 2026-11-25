@@ -2,6 +2,7 @@ import { initProposalStudio } from './proposals.js';
 import { initDailyPlanner } from './planner.js';
 import { initTeamBonding } from './teambonding.js';
 import { initSupportTickets } from './supporttickets.js';
+import { initExpenseBills } from './expenseBills.js';
 import {
   renderAccountSettingsCard,
   bindAccountSettingsCard,
@@ -71,6 +72,7 @@ const ADMIN_TABS = [
   { key: 'dailytasks', label: 'Daily Planner', icon: '📅' },
   { key: 'tickets', label: 'Support Tickets', icon: '🎫' },
   { key: 'billing_dashboard', label: 'Accounts & Billing', icon: '💳', href: '/accounts' },
+  { key: 'expensebills', label: 'Expenses vs Revenue', icon: '🧾' },
   { key: 'proposals', label: 'Proposal Studio', icon: '📜' },
   { key: 'teambonding', label: 'Team Chat & Lounge', icon: '💬' },
   { key: 'logjob', label: 'Log a Job', icon: '➕' },
@@ -130,6 +132,7 @@ async function renderTab(skipSkeleton = false) {
     else if (ui.tab === 'dailytasks') await tabDailyTasks(c);
     else if (ui.tab === 'tickets' || ui.tab === 'supporttickets') await tabSupportTickets(c);
     else if (ui.tab === 'proposals') await tabProposals(c);
+    else if (ui.tab === 'expensebills') await tabExpenseBills(c);
     else if (ui.tab === 'teambonding' || ui.tab === 'bonding') await tabTeamBonding(c);
     else if (ui.tab === 'logjob') tabLogJob(c);
     else if (ui.tab === 'jobs') await tabJobs(c);
@@ -150,6 +153,12 @@ async function tabProposals(c) {
   c.innerHTML = '<div id="proposals-module-root"></div>';
   const root = c.querySelector('#proposals-module-root');
   initProposalStudio(root);
+}
+
+async function tabExpenseBills(c) {
+  c.innerHTML = '<div id="expensebills-module-root"></div>';
+  const root = c.querySelector('#expensebills-module-root');
+  await initExpenseBills(root);
 }
 
 async function tabTeamBonding(c) {

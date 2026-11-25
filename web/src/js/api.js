@@ -1771,6 +1771,7 @@ export const DEFAULT_SIDEBAR_CONFIG = {
     { key: 'dailytasks', label: 'Daily Planner', icon: '📅', visible: true, category: 'Productivity' },
     { key: 'tickets', label: 'Support Tickets', icon: '🎫', visible: true, category: 'Support' },
     { key: 'billing_dashboard', label: 'Accounts & Billing', icon: '💳', href: '/accounts', visible: true, category: 'Finance' },
+    { key: 'expensebills', label: 'Expenses vs Revenue', icon: '🧾', visible: true, category: 'Finance' },
     { key: 'proposals', label: 'Proposal Studio', icon: '📜', visible: true, category: 'Sales' },
     { key: 'teambonding', label: 'Team Chat & Lounge', icon: '💬', visible: true, category: 'Collaboration' },
     { key: 'logjob', label: 'Log a Job', icon: '➕', visible: true, category: 'Operations' },

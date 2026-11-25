@@ -2383,6 +2383,7 @@ app.use("/api/tickets", require("./routes/tickets"));
 app.use("/api/upload", uploadRouter);
 app.use("/api/tasks", require("./routes/tasks"));
 app.use("/api/accounts", require("./routes/accounts"));
+app.use("/api/expense-bills", require("./routes/expenseBills"));
 app.use("/api/proposals", require("./routes/proposals"));
 app.use("/api/archive", require("./routes/archive"));
 app.use("/api/bonding", require("./routes/teambonding"));
