@@ -10,6 +10,7 @@ import {
   bindAttachmentUploader,
   getUploaderAttachments
 } from '/src/js/api.js';
+import { PROPOSAL_LOGO_DATA_URI } from '/src/js/proposalLogo.js';
 
 const CDN = {
   html2canvas: 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js',
@@ -35,24 +36,8 @@ function loadScript(src, globalName) {
   });
 }
 
-let cachedLogoDataUrl = null;
 async function getLogoDataUrl() {
-  if (cachedLogoDataUrl) return cachedLogoDataUrl;
-  try {
-    const resp = await fetch('/logo.png');
-    const blob = await resp.blob();
-    return await new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        cachedLogoDataUrl = reader.result;
-        resolve(cachedLogoDataUrl);
-      };
-      reader.onerror = () => resolve('/logo.png');
-      reader.readAsDataURL(blob);
-    });
-  } catch (e) {
-    return '/logo.png';
-  }
+  return PROPOSAL_LOGO_DATA_URI || '/logo.png';
 }
 
 function emptyRows(count = 7) {
@@ -105,6 +90,10 @@ function buildPrintableSheetHTML(bill, logoSrc) {
   return `
     <div class="eb-pdf-sheet" style="width:1050px;background:#ffffff;color:#111827;font-family:Arial,Helvetica,sans-serif;padding:24px 28px;box-sizing:border-box;">
       <style>
+        .eb-pdf-sheet, .eb-pdf-sheet * {
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
         .eb-pdf-sheet table, .eb-pdf-sheet tr, .eb-pdf-sheet td, .eb-pdf-sheet th {
           font-family: Arial, Helvetica, sans-serif !important;
           box-sizing: border-box !important;
@@ -126,20 +115,20 @@ function buildPrintableSheetHTML(bill, logoSrc) {
       </style>
       <table style="width:100%;border-collapse:collapse;border:1.5px solid #1f2937;table-layout:fixed;">
         <colgroup>
-          <col style="width:6%;">
+          <col style="width:7%;">
           <col style="width:11%;">
           <col style="width:16%;">
           <col style="width:10%;">
           <col style="width:11%;">
-          <col style="width:19%;">
+          <col style="width:18%;">
           <col style="width:14%;">
           <col style="width:13%;">
         </colgroup>
         <!-- Top Header Row -->
         <tr>
           <td colspan="1" style="border:1.2px solid #1f2937;padding:8px 6px;text-align:center;vertical-align:middle;background:#ffffff !important;">
-            <img src="${logoSrc}" alt="CI 360" style="width:36px;height:36px;object-fit:contain;display:block;margin:0 auto 2px;" />
-            <div style="font-size:10px;font-weight:700;color:#111827;letter-spacing:0.3px;">CI 360°</div>
+            <img src="${logoSrc}" alt="CI 360" style="width:44px;height:44px;object-fit:contain;display:block;margin:0 auto 3px;" />
+            <div style="font-size:11px;font-weight:800;color:#0369a1;letter-spacing:0.3px;">CI <span style="color:#06b6d4;">360°</span></div>
           </td>
           <td colspan="5" style="border:1.2px solid #1f2937;padding:12px 10px;text-align:center;vertical-align:middle;background:#ffffff !important;">
             <div style="font-size:18px;font-weight:800;letter-spacing:0.8px;color:#111827;text-transform:uppercase;">
@@ -615,8 +604,8 @@ export async function initExpenseBills(container) {
             <!-- Header Bar matching printed layout -->
             <div style="display:grid;grid-template-columns:110px 1fr 220px;border-bottom:1.5px solid var(--border-md);background:var(--bg-elevated);">
               <div style="padding:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;border-right:1.5px solid var(--border-md);">
-                <img src="/logo.png" alt="CI 360°" style="width:36px;height:36px;object-fit:contain;margin-bottom:3px;" />
-                <span style="font-size:11px;font-weight:800;color:var(--text-1);">CI 360°</span>
+                <img src="${PROPOSAL_LOGO_DATA_URI}" alt="CI 360°" style="width:42px;height:42px;object-fit:contain;margin-bottom:3px;" />
+                <span style="font-size:11.5px;font-weight:800;color:#0284c7;">CI <span style="color:#06b6d4;">360°</span></span>
               </div>
               <div style="padding:12px;display:flex;align-items:center;justify-content:center;border-right:1.5px solid var(--border-md);">
                 <span style="font-size:17px;font-weight:800;letter-spacing:0.6px;color:var(--text-1);text-transform:uppercase;">
