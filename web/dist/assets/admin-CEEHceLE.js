@@ -1,5 +1,25 @@
 import{c as de,k as q,e as A,g as X,l as Be,q as De,s as Ne,m as ze,j as qe,f as Re,d as Pe,t as _e,u as He,n as Me,o as Le,D as J,v as Se,w as ae,x as Ue,y as je}from"./api-C80ftWJy.js";import{initProposalStudio as Fe}from"./proposals-Cyu6lGlT.js";import{i as Oe,a as Je,b as Ve}from"./supporttickets-DhrmnRx4.js";const ce={html2canvas:"https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js",jspdf:"https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"};function pe(t,s){return s&&window[s]?Promise.resolve(window[s]):new Promise((e,a)=>{const o=document.querySelector(`script[src="${t}"]`);if(o){if(s&&window[s])return e(window[s]);o.addEventListener("load",()=>e(s?window[s]:!0)),o.addEventListener("error",()=>a(new Error("Failed to load "+t)));return}const i=document.createElement("script");i.src=t,i.async=!0,i.onload=()=>e(s?window[s]:!0),i.onerror=()=>a(new Error("Failed to load "+t)),document.head.appendChild(i)})}let Z=null;async function $e(){if(Z)return Z;try{const s=await(await fetch("/logo.png")).blob();return await new Promise(e=>{const a=new FileReader;a.onloadend=()=>{Z=a.result,e(Z)},a.onerror=()=>e("/logo.png"),a.readAsDataURL(s)})}catch{return"/logo.png"}}function ie(t=7){return Array.from({length:t},(s,e)=>({srNo:e+1,date:"",vendorName:"",billNo:"",amount:"",particulars:"",originalBillReceived:"",remarks:""}))}function te(t){if(!t)return"";const s=String(t).trim(),e=s.match(/^(\d{4})-(\d{2})-(\d{2})$/);return e?`${e[3]}-${e[2]}-${e[1]}`:s}function ue(t){return t===""||t===null||t===void 0||isNaN(Number(t))?"":"₹ "+Number(t).toLocaleString("en-IN",{minimumFractionDigits:0,maximumFractionDigits:2})}function ke(t,s){const e=Array.isArray(t.rows)?t.rows:[],a=Math.max(7,e.length),o=[];for(let l=0;l<a;l++){const c=e[l]||{};o.push({srNo:l+1,date:te(c.date||""),vendorName:c.vendorName||"",billNo:c.billNo||"",amount:ue(c.amount),particulars:c.particulars||"",originalBillReceived:c.originalBillReceived||"",remarks:c.remarks||""})}const i=e.reduce((l,c)=>l+(c.amount!==""&&c.amount!=null&&!isNaN(Number(c.amount))?Number(c.amount):0),0);return`
     <div class="eb-pdf-sheet" style="width:1050px;background:#ffffff;color:#111827;font-family:Arial,Helvetica,sans-serif;padding:24px 28px;box-sizing:border-box;">
+      <style>
+        .eb-pdf-sheet table, .eb-pdf-sheet tr, .eb-pdf-sheet td, .eb-pdf-sheet th {
+          font-family: Arial, Helvetica, sans-serif !important;
+          box-sizing: border-box !important;
+        }
+        .eb-pdf-sheet th {
+          background: #d1d5db !important;
+          color: #111827 !important;
+          text-transform: none !important;
+          letter-spacing: 0 !important;
+        }
+        .eb-pdf-sheet td {
+          color: #111827 !important;
+          background: #ffffff !important;
+        }
+        .eb-pdf-sheet tr.eb-pdf-total-row td {
+          background: #d1d5db !important;
+          color: #111827 !important;
+        }
+      </style>
       <table style="width:100%;border-collapse:collapse;border:1.5px solid #1f2937;table-layout:fixed;">
         <colgroup>
           <col style="width:6%;">
@@ -13,55 +33,55 @@ import{c as de,k as q,e as A,g as X,l as Be,q as De,s as Ne,m as ze,j as qe,f as
         </colgroup>
         <!-- Top Header Row -->
         <tr>
-          <td colspan="1" style="border:1.2px solid #1f2937;padding:8px 6px;text-align:center;vertical-align:middle;background:#ffffff;">
+          <td colspan="1" style="border:1.2px solid #1f2937;padding:8px 6px;text-align:center;vertical-align:middle;background:#ffffff !important;">
             <img src="${s}" alt="CI 360" style="width:36px;height:36px;object-fit:contain;display:block;margin:0 auto 2px;" />
             <div style="font-size:10px;font-weight:700;color:#111827;letter-spacing:0.3px;">CI 360°</div>
           </td>
-          <td colspan="5" style="border:1.2px solid #1f2937;padding:12px 10px;text-align:center;vertical-align:middle;background:#ffffff;">
+          <td colspan="5" style="border:1.2px solid #1f2937;padding:12px 10px;text-align:center;vertical-align:middle;background:#ffffff !important;">
             <div style="font-size:18px;font-weight:800;letter-spacing:0.8px;color:#111827;text-transform:uppercase;">
               EXPENSES AGAINST REVENUE BILL
             </div>
           </td>
-          <td colspan="2" style="border:1.2px solid #1f2937;padding:10px 12px;text-align:left;vertical-align:middle;background:#ffffff;font-size:13px;font-weight:700;color:#111827;">
+          <td colspan="2" style="border:1.2px solid #1f2937;padding:10px 12px;text-align:left;vertical-align:middle;background:#ffffff !important;font-size:13px;font-weight:700;color:#111827;">
             Date: <span style="font-weight:600;margin-left:6px;">${A(te(t.sheetDate||""))}</span>
           </td>
         </tr>
 
         <!-- Column Headers -->
-        <tr style="background:#9ca3af;">
-          <th style="border:1.2px solid #1f2937;padding:9px 5px;font-size:12px;font-weight:700;color:#111827;text-align:center;">Sr. No.</th>
-          <th style="border:1.2px solid #1f2937;padding:9px 5px;font-size:12px;font-weight:700;color:#111827;text-align:center;">Date</th>
-          <th style="border:1.2px solid #1f2937;padding:9px 5px;font-size:12px;font-weight:700;color:#111827;text-align:center;">Vendor Name</th>
-          <th style="border:1.2px solid #1f2937;padding:9px 5px;font-size:12px;font-weight:700;color:#111827;text-align:center;">Bill No.</th>
-          <th style="border:1.2px solid #1f2937;padding:9px 5px;font-size:12px;font-weight:700;color:#111827;text-align:center;">Amount (₹)</th>
-          <th style="border:1.2px solid #1f2937;padding:9px 5px;font-size:12px;font-weight:700;color:#111827;text-align:center;">Activity / Particulars</th>
-          <th style="border:1.2px solid #1f2937;padding:9px 5px;font-size:11.5px;font-weight:700;color:#111827;text-align:center;line-height:1.25;">Original Bill<br/>Received (Yes / No)</th>
-          <th style="border:1.2px solid #1f2937;padding:9px 5px;font-size:12px;font-weight:700;color:#111827;text-align:center;">Remarks</th>
+        <tr style="background:#d1d5db !important;">
+          <th style="border:1.2px solid #1f2937;padding:9px 5px;font-size:12px;font-weight:700;background:#d1d5db !important;color:#111827 !important;text-align:center;">Sr. No.</th>
+          <th style="border:1.2px solid #1f2937;padding:9px 5px;font-size:12px;font-weight:700;background:#d1d5db !important;color:#111827 !important;text-align:center;">Date</th>
+          <th style="border:1.2px solid #1f2937;padding:9px 5px;font-size:12px;font-weight:700;background:#d1d5db !important;color:#111827 !important;text-align:center;">Vendor Name</th>
+          <th style="border:1.2px solid #1f2937;padding:9px 5px;font-size:12px;font-weight:700;background:#d1d5db !important;color:#111827 !important;text-align:center;">Bill No.</th>
+          <th style="border:1.2px solid #1f2937;padding:9px 5px;font-size:12px;font-weight:700;background:#d1d5db !important;color:#111827 !important;text-align:center;">Amount (₹)</th>
+          <th style="border:1.2px solid #1f2937;padding:9px 5px;font-size:12px;font-weight:700;background:#d1d5db !important;color:#111827 !important;text-align:center;">Activity / Particulars</th>
+          <th style="border:1.2px solid #1f2937;padding:9px 5px;font-size:11.5px;font-weight:700;background:#d1d5db !important;color:#111827 !important;text-align:center;line-height:1.25;">Original Bill<br/>Received (Yes / No)</th>
+          <th style="border:1.2px solid #1f2937;padding:9px 5px;font-size:12px;font-weight:700;background:#d1d5db !important;color:#111827 !important;text-align:center;">Remarks</th>
         </tr>
 
         <!-- Data Rows -->
         ${o.map(l=>`
           <tr style="height:34px;background:#ffffff;">
-            <td style="border:1px solid #1f2937;padding:6px 6px;font-size:12px;text-align:center;color:#111827;">${l.srNo}</td>
-            <td style="border:1px solid #1f2937;padding:6px 6px;font-size:12px;text-align:center;color:#111827;">${A(l.date)}</td>
-            <td style="border:1px solid #1f2937;padding:6px 8px;font-size:12px;text-align:left;color:#111827;word-break:break-word;">${A(l.vendorName)}</td>
-            <td style="border:1px solid #1f2937;padding:6px 6px;font-size:12px;text-align:center;color:#111827;word-break:break-word;">${A(l.billNo)}</td>
-            <td style="border:1px solid #1f2937;padding:6px 8px;font-size:12px;text-align:right;color:#111827;font-weight:600;">${A(l.amount)}</td>
-            <td style="border:1px solid #1f2937;padding:6px 8px;font-size:12px;text-align:left;color:#111827;word-break:break-word;">${A(l.particulars)}</td>
-            <td style="border:1px solid #1f2937;padding:6px 6px;font-size:12px;text-align:center;color:#111827;font-weight:600;">${A(l.originalBillReceived)}</td>
-            <td style="border:1px solid #1f2937;padding:6px 8px;font-size:12px;text-align:left;color:#111827;word-break:break-word;">${A(l.remarks)}</td>
+            <td style="border:1px solid #1f2937;padding:6px 6px;font-size:12px;text-align:center;color:#111827;background:#ffffff !important;">${l.srNo}</td>
+            <td style="border:1px solid #1f2937;padding:6px 6px;font-size:12px;text-align:center;color:#111827;background:#ffffff !important;">${A(l.date)}</td>
+            <td style="border:1px solid #1f2937;padding:6px 8px;font-size:12px;text-align:left;color:#111827;background:#ffffff !important;word-break:break-word;">${A(l.vendorName)}</td>
+            <td style="border:1px solid #1f2937;padding:6px 6px;font-size:12px;text-align:center;color:#111827;background:#ffffff !important;word-break:break-word;">${A(l.billNo)}</td>
+            <td style="border:1px solid #1f2937;padding:6px 8px;font-size:12px;text-align:right;color:#111827;background:#ffffff !important;font-weight:600;">${A(l.amount)}</td>
+            <td style="border:1px solid #1f2937;padding:6px 8px;font-size:12px;text-align:left;color:#111827;background:#ffffff !important;word-break:break-word;">${A(l.particulars)}</td>
+            <td style="border:1px solid #1f2937;padding:6px 6px;font-size:12px;text-align:center;color:#111827;background:#ffffff !important;font-weight:600;">${A(l.originalBillReceived)}</td>
+            <td style="border:1px solid #1f2937;padding:6px 8px;font-size:12px;text-align:left;color:#111827;background:#ffffff !important;word-break:break-word;">${A(l.remarks)}</td>
           </tr>
         `).join("")}
 
-        <!-- Grey Divider / Total Bar -->
-        <tr style="background:#6b7280;height:22px;">
-          <td colspan="4" style="border:1px solid #1f2937;padding:4px 10px;font-size:11.5px;font-weight:700;color:#ffffff;text-align:right;">
+        <!-- Light Grey Divider / Total Bar -->
+        <tr class="eb-pdf-total-row" style="background:#d1d5db;height:24px;">
+          <td colspan="4" style="border:1px solid #1f2937;padding:4px 10px;font-size:11.5px;font-weight:700;color:#111827 !important;background:#d1d5db !important;text-align:right;">
             ${i>0?"Total Amount :":""}
           </td>
-          <td style="border:1px solid #1f2937;padding:4px 8px;font-size:12px;font-weight:800;color:#ffffff;text-align:right;">
+          <td style="border:1px solid #1f2937;padding:4px 8px;font-size:12px;font-weight:800;color:#111827 !important;background:#d1d5db !important;text-align:right;">
             ${i>0?A(ue(i)):""}
           </td>
-          <td colspan="3" style="border:1px solid #1f2937;padding:4px 8px;"></td>
+          <td colspan="3" style="border:1px solid #1f2937;padding:4px 8px;background:#d1d5db !important;"></td>
         </tr>
 
         <!-- Signature / Approval Row -->

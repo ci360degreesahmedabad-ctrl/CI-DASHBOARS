@@ -103,6 +103,26 @@ function buildPrintableSheetHTML(bill, logoSrc) {
 
   return `
     <div class="eb-pdf-sheet" style="width:1050px;background:#ffffff;color:#111827;font-family:Arial,Helvetica,sans-serif;padding:24px 28px;box-sizing:border-box;">
+      <style>
+        .eb-pdf-sheet table, .eb-pdf-sheet tr, .eb-pdf-sheet td, .eb-pdf-sheet th {
+          font-family: Arial, Helvetica, sans-serif !important;
+          box-sizing: border-box !important;
+        }
+        .eb-pdf-sheet th {
+          background: #d1d5db !important;
+          color: #111827 !important;
+          text-transform: none !important;
+          letter-spacing: 0 !important;
+        }
+        .eb-pdf-sheet td {
+          color: #111827 !important;
+          background: #ffffff !important;
+        }
+        .eb-pdf-sheet tr.eb-pdf-total-row td {
+          background: #d1d5db !important;
+          color: #111827 !important;
+        }
+      </style>
       <table style="width:100%;border-collapse:collapse;border:1.5px solid #1f2937;table-layout:fixed;">
         <colgroup>
           <col style="width:6%;">
@@ -116,55 +136,55 @@ function buildPrintableSheetHTML(bill, logoSrc) {
         </colgroup>
         <!-- Top Header Row -->
         <tr>
-          <td colspan="1" style="border:1.2px solid #1f2937;padding:8px 6px;text-align:center;vertical-align:middle;background:#ffffff;">
+          <td colspan="1" style="border:1.2px solid #1f2937;padding:8px 6px;text-align:center;vertical-align:middle;background:#ffffff !important;">
             <img src="${logoSrc}" alt="CI 360" style="width:36px;height:36px;object-fit:contain;display:block;margin:0 auto 2px;" />
             <div style="font-size:10px;font-weight:700;color:#111827;letter-spacing:0.3px;">CI 360°</div>
           </td>
-          <td colspan="5" style="border:1.2px solid #1f2937;padding:12px 10px;text-align:center;vertical-align:middle;background:#ffffff;">
+          <td colspan="5" style="border:1.2px solid #1f2937;padding:12px 10px;text-align:center;vertical-align:middle;background:#ffffff !important;">
             <div style="font-size:18px;font-weight:800;letter-spacing:0.8px;color:#111827;text-transform:uppercase;">
               EXPENSES AGAINST REVENUE BILL
             </div>
           </td>
-          <td colspan="2" style="border:1.2px solid #1f2937;padding:10px 12px;text-align:left;vertical-align:middle;background:#ffffff;font-size:13px;font-weight:700;color:#111827;">
+          <td colspan="2" style="border:1.2px solid #1f2937;padding:10px 12px;text-align:left;vertical-align:middle;background:#ffffff !important;font-size:13px;font-weight:700;color:#111827;">
             Date: <span style="font-weight:600;margin-left:6px;">${escapeHtml(formatDisplayDate(bill.sheetDate || ''))}</span>
           </td>
         </tr>
 
         <!-- Column Headers -->
-        <tr style="background:#9ca3af;">
-          <th style="border:1.2px solid #1f2937;padding:9px 5px;font-size:12px;font-weight:700;color:#111827;text-align:center;">Sr. No.</th>
-          <th style="border:1.2px solid #1f2937;padding:9px 5px;font-size:12px;font-weight:700;color:#111827;text-align:center;">Date</th>
-          <th style="border:1.2px solid #1f2937;padding:9px 5px;font-size:12px;font-weight:700;color:#111827;text-align:center;">Vendor Name</th>
-          <th style="border:1.2px solid #1f2937;padding:9px 5px;font-size:12px;font-weight:700;color:#111827;text-align:center;">Bill No.</th>
-          <th style="border:1.2px solid #1f2937;padding:9px 5px;font-size:12px;font-weight:700;color:#111827;text-align:center;">Amount (₹)</th>
-          <th style="border:1.2px solid #1f2937;padding:9px 5px;font-size:12px;font-weight:700;color:#111827;text-align:center;">Activity / Particulars</th>
-          <th style="border:1.2px solid #1f2937;padding:9px 5px;font-size:11.5px;font-weight:700;color:#111827;text-align:center;line-height:1.25;">Original Bill<br/>Received (Yes / No)</th>
-          <th style="border:1.2px solid #1f2937;padding:9px 5px;font-size:12px;font-weight:700;color:#111827;text-align:center;">Remarks</th>
+        <tr style="background:#d1d5db !important;">
+          <th style="border:1.2px solid #1f2937;padding:9px 5px;font-size:12px;font-weight:700;background:#d1d5db !important;color:#111827 !important;text-align:center;">Sr. No.</th>
+          <th style="border:1.2px solid #1f2937;padding:9px 5px;font-size:12px;font-weight:700;background:#d1d5db !important;color:#111827 !important;text-align:center;">Date</th>
+          <th style="border:1.2px solid #1f2937;padding:9px 5px;font-size:12px;font-weight:700;background:#d1d5db !important;color:#111827 !important;text-align:center;">Vendor Name</th>
+          <th style="border:1.2px solid #1f2937;padding:9px 5px;font-size:12px;font-weight:700;background:#d1d5db !important;color:#111827 !important;text-align:center;">Bill No.</th>
+          <th style="border:1.2px solid #1f2937;padding:9px 5px;font-size:12px;font-weight:700;background:#d1d5db !important;color:#111827 !important;text-align:center;">Amount (₹)</th>
+          <th style="border:1.2px solid #1f2937;padding:9px 5px;font-size:12px;font-weight:700;background:#d1d5db !important;color:#111827 !important;text-align:center;">Activity / Particulars</th>
+          <th style="border:1.2px solid #1f2937;padding:9px 5px;font-size:11.5px;font-weight:700;background:#d1d5db !important;color:#111827 !important;text-align:center;line-height:1.25;">Original Bill<br/>Received (Yes / No)</th>
+          <th style="border:1.2px solid #1f2937;padding:9px 5px;font-size:12px;font-weight:700;background:#d1d5db !important;color:#111827 !important;text-align:center;">Remarks</th>
         </tr>
 
         <!-- Data Rows -->
         ${displayRows.map(r => `
           <tr style="height:34px;background:#ffffff;">
-            <td style="border:1px solid #1f2937;padding:6px 6px;font-size:12px;text-align:center;color:#111827;">${r.srNo}</td>
-            <td style="border:1px solid #1f2937;padding:6px 6px;font-size:12px;text-align:center;color:#111827;">${escapeHtml(r.date)}</td>
-            <td style="border:1px solid #1f2937;padding:6px 8px;font-size:12px;text-align:left;color:#111827;word-break:break-word;">${escapeHtml(r.vendorName)}</td>
-            <td style="border:1px solid #1f2937;padding:6px 6px;font-size:12px;text-align:center;color:#111827;word-break:break-word;">${escapeHtml(r.billNo)}</td>
-            <td style="border:1px solid #1f2937;padding:6px 8px;font-size:12px;text-align:right;color:#111827;font-weight:600;">${escapeHtml(r.amount)}</td>
-            <td style="border:1px solid #1f2937;padding:6px 8px;font-size:12px;text-align:left;color:#111827;word-break:break-word;">${escapeHtml(r.particulars)}</td>
-            <td style="border:1px solid #1f2937;padding:6px 6px;font-size:12px;text-align:center;color:#111827;font-weight:600;">${escapeHtml(r.originalBillReceived)}</td>
-            <td style="border:1px solid #1f2937;padding:6px 8px;font-size:12px;text-align:left;color:#111827;word-break:break-word;">${escapeHtml(r.remarks)}</td>
+            <td style="border:1px solid #1f2937;padding:6px 6px;font-size:12px;text-align:center;color:#111827;background:#ffffff !important;">${r.srNo}</td>
+            <td style="border:1px solid #1f2937;padding:6px 6px;font-size:12px;text-align:center;color:#111827;background:#ffffff !important;">${escapeHtml(r.date)}</td>
+            <td style="border:1px solid #1f2937;padding:6px 8px;font-size:12px;text-align:left;color:#111827;background:#ffffff !important;word-break:break-word;">${escapeHtml(r.vendorName)}</td>
+            <td style="border:1px solid #1f2937;padding:6px 6px;font-size:12px;text-align:center;color:#111827;background:#ffffff !important;word-break:break-word;">${escapeHtml(r.billNo)}</td>
+            <td style="border:1px solid #1f2937;padding:6px 8px;font-size:12px;text-align:right;color:#111827;background:#ffffff !important;font-weight:600;">${escapeHtml(r.amount)}</td>
+            <td style="border:1px solid #1f2937;padding:6px 8px;font-size:12px;text-align:left;color:#111827;background:#ffffff !important;word-break:break-word;">${escapeHtml(r.particulars)}</td>
+            <td style="border:1px solid #1f2937;padding:6px 6px;font-size:12px;text-align:center;color:#111827;background:#ffffff !important;font-weight:600;">${escapeHtml(r.originalBillReceived)}</td>
+            <td style="border:1px solid #1f2937;padding:6px 8px;font-size:12px;text-align:left;color:#111827;background:#ffffff !important;word-break:break-word;">${escapeHtml(r.remarks)}</td>
           </tr>
         `).join('')}
 
-        <!-- Grey Divider / Total Bar -->
-        <tr style="background:#6b7280;height:22px;">
-          <td colspan="4" style="border:1px solid #1f2937;padding:4px 10px;font-size:11.5px;font-weight:700;color:#ffffff;text-align:right;">
+        <!-- Light Grey Divider / Total Bar -->
+        <tr class="eb-pdf-total-row" style="background:#d1d5db;height:24px;">
+          <td colspan="4" style="border:1px solid #1f2937;padding:4px 10px;font-size:11.5px;font-weight:700;color:#111827 !important;background:#d1d5db !important;text-align:right;">
             ${totalAmt > 0 ? 'Total Amount :' : ''}
           </td>
-          <td style="border:1px solid #1f2937;padding:4px 8px;font-size:12px;font-weight:800;color:#ffffff;text-align:right;">
+          <td style="border:1px solid #1f2937;padding:4px 8px;font-size:12px;font-weight:800;color:#111827 !important;background:#d1d5db !important;text-align:right;">
             ${totalAmt > 0 ? escapeHtml(formatAmountCell(totalAmt)) : ''}
           </td>
-          <td colspan="3" style="border:1px solid #1f2937;padding:4px 8px;"></td>
+          <td colspan="3" style="border:1px solid #1f2937;padding:4px 8px;background:#d1d5db !important;"></td>
         </tr>
 
         <!-- Signature / Approval Row -->
