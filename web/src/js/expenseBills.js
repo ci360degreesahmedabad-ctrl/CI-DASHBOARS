@@ -7,7 +7,8 @@ import {
   flashToast,
   fmtINR,
   renderAttachmentUploader,
-  bindAttachmentUploader
+  bindAttachmentUploader,
+  getUploaderAttachments
 } from '/src/js/api.js';
 
 const CDN = {
@@ -83,9 +84,9 @@ function formatAmountCell(val) {
 
 function buildPrintableSheetHTML(bill, logoSrc) {
   const rawRows = Array.isArray(bill.rows) ? bill.rows : [];
-  const minRows = Math.max(7, rawRows.length);
+  const rowCount = Math.max(1, rawRows.length);
   const displayRows = [];
-  for (let i = 0; i < minRows; i++) {
+  for (let i = 0; i < rowCount; i++) {
     const r = rawRows[i] || {};
     displayRows.push({
       srNo: i + 1,
@@ -732,7 +733,7 @@ export async function initExpenseBills(container) {
       </div>
     `;
 
-    const uploaderApi = bindAttachmentUploader('eb-attachments-uploader', {
+    bindAttachmentUploader('eb-attachments-uploader', {
       existing: Array.isArray(b.attachments) ? b.attachments : []
     });
 
@@ -748,7 +749,7 @@ export async function initExpenseBills(container) {
 
     container.querySelector('#ebAddRowBtn').onclick = () => {
       readEditorDOMIntoState();
-      b.attachments = uploaderApi.getAttachments();
+      b.attachments = getUploaderAttachments('eb-attachments-uploader');
       b.rows.push({
         srNo: b.rows.length + 1,
         date: '',
@@ -763,13 +764,15 @@ export async function initExpenseBills(container) {
     };
 
     container.querySelectorAll('.eb-remove-row-btn').forEach(btn => {
-      btn.onclick = () => {
+      btn.onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         readEditorDOMIntoState();
-        b.attachments = uploaderApi.getAttachments();
+        b.attachments = getUploaderAttachments('eb-attachments-uploader');
         const idx = parseInt(btn.dataset.idx, 10);
         if (b.rows.length <= 1) {
           b.rows = emptyRows(1);
-        } else {
+        } else if (!isNaN(idx) && idx >= 0 && idx < b.rows.length) {
           b.rows.splice(idx, 1);
         }
         render();
@@ -778,7 +781,7 @@ export async function initExpenseBills(container) {
 
     const saveSheet = async () => {
       readEditorDOMIntoState();
-      b.attachments = uploaderApi.getAttachments();
+      b.attachments = getUploaderAttachments('eb-attachments-uploader');
       const saveBtn = container.querySelector('#ebSaveBtn');
       const oldTxt = saveBtn.textContent;
       saveBtn.disabled = true;
