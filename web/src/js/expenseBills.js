@@ -661,7 +661,15 @@ export async function initExpenseBills(container) {
                       <input type="number" step="0.01" class="input eb-r-amount" placeholder="0" value="${r.amount !== '' && r.amount != null ? escapeHtml(String(r.amount)) : ''}" style="padding:5px 7px;font-size:12px;text-align:right;">
                     </td>
                     <td style="padding:4px;border-right:1px solid var(--border-sm);">
-                      <input type="text" class="input eb-r-part" placeholder="Activity / particulars..." value="${escapeHtml(r.particulars || '')}" style="padding:5px 7px;font-size:12px;">
+                      <select class="input eb-r-part" style="padding:5px 6px;font-size:12px;">
+                        <option value="" ${!r.particulars ? 'selected' : ''}>— Select Activity —</option>
+                        ${['SEO Optimization', 'Creators & Reels', 'Makeup', 'Collaboration'].map(opt => `
+                          <option value="${escapeHtml(opt)}" ${r.particulars === opt ? 'selected' : ''}>${escapeHtml(opt)}</option>
+                        `).join('')}
+                        ${r.particulars && !['SEO Optimization', 'Creators & Reels', 'Makeup', 'Collaboration'].includes(r.particulars) ? `
+                          <option value="${escapeHtml(r.particulars)}" selected>${escapeHtml(r.particulars)}</option>
+                        ` : ''}
+                      </select>
                     </td>
                     <td style="padding:4px;border-right:1px solid var(--border-sm);">
                       <select class="input eb-r-orig" style="padding:5px 6px;font-size:12px;">
