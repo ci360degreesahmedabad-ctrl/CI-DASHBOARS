@@ -251,29 +251,29 @@ import{c as de,k as R,e as A,g as X,l as De,q as Ne,s as ze,t as se,m as Re,j as
             </div>
 
             <!-- Table Grid -->
-            <table style="width:100%;border-collapse:collapse;table-layout:fixed;">
+            <table class="eb-editor-table" style="width:100%;border-collapse:collapse;table-layout:fixed;">
               <colgroup>
                 <col style="width:58px;">
                 <col style="width:128px;">
-                <col style="width:165px;">
-                <col style="width:110px;">
-                <col style="width:115px;">
-                <col style="width:190px;">
-                <col style="width:130px;">
-                <col style="width:140px;">
+                <col style="width:160px;">
+                <col style="width:108px;">
+                <col style="width:112px;">
+                <col style="width:185px;">
+                <col style="width:148px;">
+                <col style="width:138px;">
                 <col style="width:42px;">
               </colgroup>
               <thead>
                 <tr style="background:rgba(148,163,184,0.22);border-bottom:1.5px solid var(--border-md);">
-                  <th style="padding:9px 4px;font-size:11.5px;font-weight:700;text-align:center;border-right:1px solid var(--border-sm);">Sr. No.</th>
-                  <th style="padding:9px 6px;font-size:11.5px;font-weight:700;text-align:center;border-right:1px solid var(--border-sm);">Date</th>
-                  <th style="padding:9px 6px;font-size:11.5px;font-weight:700;text-align:center;border-right:1px solid var(--border-sm);">Vendor Name</th>
-                  <th style="padding:9px 6px;font-size:11.5px;font-weight:700;text-align:center;border-right:1px solid var(--border-sm);">Bill No.</th>
-                  <th style="padding:9px 6px;font-size:11.5px;font-weight:700;text-align:center;border-right:1px solid var(--border-sm);">Amount (₹)</th>
-                  <th style="padding:9px 6px;font-size:11.5px;font-weight:700;text-align:center;border-right:1px solid var(--border-sm);">Activity / Particulars</th>
-                  <th style="padding:9px 6px;font-size:11px;font-weight:700;text-align:center;border-right:1px solid var(--border-sm);line-height:1.2;">Original Bill Received (Yes / No)</th>
-                  <th style="padding:9px 6px;font-size:11.5px;font-weight:700;text-align:center;border-right:1px solid var(--border-sm);">Remarks</th>
-                  <th style="padding:9px 4px;font-size:11px;text-align:center;"></th>
+                  <th style="padding:9px 4px;font-size:11.5px;font-weight:700;text-align:center;border-right:1px solid var(--border-sm);white-space:normal !important;word-break:break-word;">Sr. No.</th>
+                  <th style="padding:9px 6px;font-size:11.5px;font-weight:700;text-align:center;border-right:1px solid var(--border-sm);white-space:normal !important;word-break:break-word;">Date</th>
+                  <th style="padding:9px 6px;font-size:11.5px;font-weight:700;text-align:center;border-right:1px solid var(--border-sm);white-space:normal !important;word-break:break-word;">Vendor Name</th>
+                  <th style="padding:9px 6px;font-size:11.5px;font-weight:700;text-align:center;border-right:1px solid var(--border-sm);white-space:normal !important;word-break:break-word;">Bill No.</th>
+                  <th style="padding:9px 6px;font-size:11.5px;font-weight:700;text-align:center;border-right:1px solid var(--border-sm);white-space:normal !important;word-break:break-word;">Amount (₹)</th>
+                  <th style="padding:9px 6px;font-size:11.5px;font-weight:700;text-align:center;border-right:1px solid var(--border-sm);white-space:normal !important;word-break:break-word;">Activity / Particulars</th>
+                  <th style="padding:9px 6px;font-size:11px;font-weight:700;text-align:center;border-right:1px solid var(--border-sm);line-height:1.25;white-space:normal !important;word-break:break-word;">Original Bill<br/>Received (Yes / No)</th>
+                  <th style="padding:9px 6px;font-size:11.5px;font-weight:700;text-align:center;border-right:1px solid var(--border-sm);white-space:normal !important;word-break:break-word;">Remarks</th>
+                  <th style="padding:9px 4px;font-size:11px;text-align:center;white-space:normal !important;"></th>
                 </tr>
               </thead>
               <tbody>
